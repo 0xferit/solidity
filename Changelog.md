@@ -8,6 +8,7 @@ Compiler Features:
 Bugfixes:
 * Code Generator: Fix ICE on parenthesized custom error construction in require statement.
 * Commandline Interface: Report proper error instead of ICE on non-hex mixed-case address value given via `--libraries`.
+* Constant Evaluator: Fix incorrect result of bitwise `not` and `shift` which were not consistent with codegen.
 
 
 ### 0.8.36 (2026-07-09)
