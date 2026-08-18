@@ -31,6 +31,7 @@
 
 #include <libsolutil/Numeric.h>
 #include <libsolutil/Common.h>
+#include <libsolutil/UnorderedContainers.h>
 
 #include <map>
 #include <set>
@@ -167,6 +168,13 @@ protected:
 	std::map<FunctionHandle, SideEffects> m_functionSideEffects;
 
 private:
+	void setSortedReferences(
+		YulName _referencer,
+		std::vector<YulName> const& _referencedVariablesSorted
+	);
+
+	void eraseSortedReferences(YulName _referencer);
+
 	struct Environment
 	{
 		util::unordered_flat_map<YulName, YulName> storage;
@@ -178,9 +186,11 @@ private:
 	{
 		/// Current values of variables, always movable.
 		util::unordered_flat_map<YulName, AssignedValue> value;
-		/// m_references[a].contains(b) <=> the current expression assigned to a references b
-		/// The mapped vectors _must always_ be sorted
+		/// sortedReferences[a] contains b iff the current expression assigned to a references b.
+		/// The mapped vectors must be sorted and duplicate-free.
 		util::unordered_flat_map<YulName, std::vector<YulName>> sortedReferences;
+		/// reverseReferences[b] contains a iff sortedReferences[a] contains b.
+		util::unordered_flat_map<YulName, util::unordered_flat_set<YulName>> reverseReferences;
 
 		Environment environment;
 	};
